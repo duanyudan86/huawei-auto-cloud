@@ -31,7 +31,7 @@ class AirConditioner(CoordinatorEntity[HuaweiAutoCloudCoordinator], ClimateEntit
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.AUTO]
     _attr_preset_modes = list(_PRESETS)
     _attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_min_temp = 16
     _attr_max_temp = 31
     _attr_target_temperature_step = 0.5
@@ -52,11 +52,11 @@ class AirConditioner(CoordinatorEntity[HuaweiAutoCloudCoordinator], ClimateEntit
         return HVACMode.AUTO if status in {1, "1"} else HVACMode.OFF if status is not None else None
 
     @property
-    def target_temperature(self) -> float | None:
+    def native_target_temperature(self) -> float | None:
         return _temperature(self._value("remoteTemp"), require_valid_target=True)
 
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         return _temperature(self._value("insideTemp"))
 
     @property
@@ -73,7 +73,7 @@ class AirConditioner(CoordinatorEntity[HuaweiAutoCloudCoordinator], ClimateEntit
             raise ValueError("unsupported HVAC mode")
 
     async def async_turn_on(self) -> None:
-        await self.coordinator.async_control_air_conditioner(self._route_id, enabled=True, target_temp=_target_tenths(self.target_temperature))
+        await self.coordinator.async_control_air_conditioner(self._route_id, enabled=True, target_temp=_target_tenths(self.native_target_temperature))
 
     async def async_turn_off(self) -> None:
         await self.coordinator.async_control_air_conditioner(self._route_id, enabled=False)
