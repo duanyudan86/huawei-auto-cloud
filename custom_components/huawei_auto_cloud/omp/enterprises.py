@@ -139,7 +139,8 @@ CHERY_BINDING = _binding(
 )
 BAIC_BINDING = _binding(
     "baic_ivcs", "BAIC", "BAIC", "https://apir.bjevssa.icvcs.com",
-    frozenset(), _VCAM_DISCOVERY, "2026-08-baic-static",
+    frozenset({"baic_s9t_ev_max"}), _VCAM_DISCOVERY, "2026-08-baic-static",
+    enabled_operations=_NORMAL_IVCS_OPERATIONS | {VehicleOperation.ENERGY_REPORT, VehicleOperation.LOCATION, VehicleOperation.FIRMWARE},
 )
 JAC_BINDING = _binding(
     "jac_ivcs", "JAC", "JAC", "https://apir.jacssa.icvcs.com",
